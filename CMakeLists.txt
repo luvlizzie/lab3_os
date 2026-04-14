@@ -5,9 +5,10 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 # Исполняемый файл
-add_executable(markers.exe 
+add_executable(markers.exe
     src/main.cpp
     src/marker.cpp
+    src/sync.cpp
     src/utils.cpp
 )
 
@@ -36,13 +37,14 @@ set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
 # Тестовый раннер
-add_executable(test_runner 
+add_executable(test_runner
     tests/test_runner.cpp
     tests/test_marker.cpp
+    src/sync.cpp
     src/utils.cpp
 )
 
-target_link_libraries(test_runner 
+target_link_libraries(test_runner
     gtest_main
     gmock
     pthread
