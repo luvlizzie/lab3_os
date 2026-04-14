@@ -38,4 +38,3 @@ cd build
 | Cleanup marks | Loop clearing marker's cells |
 | Signal continue | `syncSignalContinue()` |
 | 5ms sleeps | `sleepMs(SLEEP_MS)` |
-```
