@@ -39,6 +39,11 @@ void printArray(const int* array, size_t size) {
 }
 
 int main() {
+    // Initialize console mutex
+    #ifdef _WIN32
+    consoleMutex = CreateMutex(NULL, FALSE, NULL);
+    #endif
+    
     try {
         cout << "\n=== Threads Lab3 - Critical Sections & Events ===" << endl;
         cout << string(50, '=') << endl;
@@ -55,7 +60,6 @@ int main() {
         
         // Step 4: Create marker threads
         vector<MarkerData> markers(markerCount);
-        vector<MarkerData*> markerPtrs(markerCount);
         
         for (int i = 0; i < markerCount; ++i) {
             markers[i].id = i + 1;
@@ -68,7 +72,6 @@ int main() {
             markers[i].shouldContinue = false;
             
             syncInit(markers[i].sync);
-            markerPtrs[i] = &markers[i];
             
             #ifdef _WIN32
             markers[i].sync.threadHandle = CreateThread(NULL, 0, markerThread, &markers[i], 0, NULL);
@@ -82,6 +85,9 @@ int main() {
         for (auto& marker : markers) {
             syncSignalStart(marker.sync);
         }
+        
+        // Give markers time to start
+        sleepMs(10);
         
         // Step 6: Main loop
         vector<bool> activeMarkers(markerCount, true);
@@ -144,8 +150,19 @@ int main() {
         
     } catch (const std::exception& e) {
         cerr << "Error: " << e.what() << endl;
+        
+        // Cleanup on error
+        #ifdef _WIN32
+        if (consoleMutex) CloseHandle(consoleMutex);
+        #endif
+        
         return 1;
     }
+    
+    // Cleanup on success
+    #ifdef _WIN32
+    if (consoleMutex) CloseHandle(consoleMutex);
+    #endif
     
     return 0;
 }

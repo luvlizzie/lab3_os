@@ -5,6 +5,7 @@
 using std::cout;
 using std::cerr;
 using std::endl;
+using std::to_string;
 
 #ifdef _WIN32
 DWORD WINAPI markerThread(LPVOID param) {
@@ -22,7 +23,7 @@ void* markerThread(void* param) {
     data->terminate = false;
     data->shouldContinue = false;
     
-    cout << "Marker " << data->id << " started working" << endl;
+    consolePrint("Marker " + std::to_string(data->id) + " started working\n");
     
     while (!data->terminate) {
         // Generate random index
@@ -48,9 +49,9 @@ void* markerThread(void* param) {
             data->state = ThreadState::CANT_PROCEED;
             
             // Print information
-            cout << "Marker " << data->id
-                 << ": marked " << data->markedCount
-                 << " elements, cannot mark index " << randomIndex << endl;
+            consolePrint("Marker " + std::to_string(data->id) +
+                        ": marked " + std::to_string(data->markedCount) +
+                        " elements, cannot mark index " + std::to_string(randomIndex) + "\n");
             
             // Signal main thread that we can't proceed
             syncSignalCantProceed(data->sync);
@@ -92,8 +93,9 @@ void* markerThread(void* param) {
         }
     }
     
-    cout << "Marker " << data->id << " finished. Cleaned "
-         << cleanedCount << " cells (marked " << data->markedCount << ")." << endl;
+    consolePrint("Marker " + std::to_string(data->id) + " finished. Cleaned " +
+                std::to_string(cleanedCount) + " cells (marked " +
+                std::to_string(data->markedCount) + ").\n");
     
     data->state = ThreadState::FINISHED;
     

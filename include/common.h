@@ -3,6 +3,7 @@
 
 #include <cstddef>
 #include <atomic>
+#include <string>  
 
 #ifdef _WIN32
 #include <windows.h>
@@ -17,6 +18,13 @@ static constexpr int MAX_ARRAY_SIZE = 1000;
 static constexpr int MIN_MARKERS = 1;
 static constexpr int MAX_MARKERS = 10;
 static constexpr int SLEEP_MS = 5;
+
+// Global mutex for console output
+#ifdef _WIN32
+extern HANDLE consoleMutex;
+#else
+extern pthread_mutex_t consoleMutex;
+#endif
 
 // Thread states
 enum class ThreadState {
@@ -74,6 +82,7 @@ void* markerThread(void* param);
 
 // Utility functions
 void sleepMs(int milliseconds);
+void consolePrint(const std::string& message);
 
 // Synchronization helpers
 void syncInit(SyncPrimitives& sync);
