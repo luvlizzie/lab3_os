@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 #include <vector>
 #include <memory>
 #include <algorithm>
@@ -8,6 +9,7 @@ using std::cout;
 using std::cin;
 using std::cerr;
 using std::endl;
+using std::string;
 using std::vector;
 using std::unique_ptr;
 using std::make_unique;
